@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Request Form For visually Impaired</title>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+    <header role="banner">
+        <h1>Service Request Form</h1>
+        <h4 id="form-description">Please fill out the form below to describe the issue.Complete all the fields.</h4>
+    </header>
+
+    <main role="main">
+        <form id="serviceRequestForm" aria-label="IT Service Request Form" aria-describedby="form-description">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" aria-required="true" onkeyup="readInput(event)" aria-describedby="name-desc" tabindex="0">
+            <span id="name-desc" class="sr-only">Please enter your full name.</span>
+
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" aria-required="true" onkeyup="readInput(event)" aria-describedby="email-desc" tabindex="0">
+            <span id="email-desc" class="sr-only">Please enter your email address.</span>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" aria-required="true" onkeyup="readInput(event)" aria-describedby="phone-desc" tabindex="0">
+            <span id="phone-desc" class="sr-only">Please enter your phone number.</span>
+
+            <label for="issue">Describe Your Issue:</label>
+            <textarea id="issue" name="issue" rows="5" aria-required="true" onkeyup="readInput(event)" aria-describedby="issue-desc" tabindex="0"></textarea>
+            <span id="issue-desc" class="sr-only">Please describe your issue in detail.</span>
+            <label for="submit-desc">Submit Request:</label>
+
+            <button type="submit" tabindex="0" onclick="readSubmit()"><span id="submit-desc">Submit</span></button>
+        </form>
+    </main>
+
+    <script>
+        // Function to read out input
+        function readInput(event) {
+            const inputText = event.target.value;
+            const msg = new SpeechSynthesisUtterance(inputText);
+            window.speechSynthesis.speak(msg);
+        }
+
+        // Function to read out element label on focus
+        function readLabelOnFocus(event) {
+            const label = document.querySelector(`label[for="${event.target.id}"]`);
+            if (label) {
+                const msg = new SpeechSynthesisUtterance(label.textContent);
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        // Function to read out submit button text
+        function readSubmit() {
+            const msg = new SpeechSynthesisUtterance('Submit Request');
+            window.speechSynthesis.speak(msg);
+        }
+
+        // Add event listeners for focus to read out labels
+        document.querySelectorAll('input, textarea, select, button').forEach(element => {
+            element.addEventListener('focus', readLabelOnFocus);
+        });
+
+        // Read out the form title and description on page load
+        window.addEventListener('load', () => {
+            const title = document.querySelector('h1').textContent;
+            const description = document.getElementById('form-description').textContent;
+            const msg = new SpeechSynthesisUtterance(`${title}. ${description}`);
+            window.speechSynthesis.speak(msg);
+        });
+    </script>
+</body>
+</html>
